@@ -627,9 +627,41 @@ select Id,Name,toLabel(Address) FROM Account
 ```java
 select FIELDS(ALL) FROM InterfaceLog__c Order by CreatedDate desc limit 20
 ```
-
-
-
+```java
+ string sqlStr = 'select ';
+            Map<String, Schema.SObjectField> fieldMap = new Account().getSObjectType().getDescribe().fields.getMap();
+            for (Schema.SObjectField field : fieldMap.values()){
+                sqlStr += field.getDescribe().name + ', ';
+            }
+            //申请人
+            sqlStr += 'Owner.FederationIdentifier' + ', ';
+            //所在部门
+            sqlStr += 'Owner.Department' + ', ';
+            //申请人名字
+            sqlStr += 'Owner.Name' + ', ';
+            //部门Id
+            sqlStr += 'Owner.OaDepartmentId__c' + ', ';
+            //所有人Id
+            sqlStr += 'Owner.OaUserId__c' + ', ';
+            //国家代码
+            sqlStr += 'Country__r.Code__c' + ', ';
+            //地区代码
+            sqlStr += 'CountryArea__r.Code__c' + ', ';
+            //付款条件
+            sqlStr += 'PMTTerm__r.Name' + ', ';
+            sqlStr += 'CountryOfBank__r.name' + ', ';
+            //国际贸易条款
+            // sqlStr += 'Incoterms__r.Name' + ', ';
+            //联行号
+            sqlStr += ' CNAPSCode__r.Name' + ', ';
+            //国家名称
+            sqlStr += '  Country__r.Name' + ', ';
+            //地区名称
+            sqlStr += '  CountryArea__r.Name' + ', ';
+            sqlStr = sqlStr.removeEnd(', ');
+            sqlStr += '   FROM Account WHERE Id =:recordId';
+            Account accMain = Database.query(sqlStr);
+```
 ### 新建记录组件，阻止跳转
 
 ```js
