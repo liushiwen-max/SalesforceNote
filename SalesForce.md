@@ -160,6 +160,7 @@ isNotEmpty : function(obj){
     }
 }
 ```
+注意list使用 .length>0 来判断是不是没有值
 
 ### 标准异步调用
 
